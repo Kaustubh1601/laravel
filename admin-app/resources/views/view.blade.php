@@ -10,7 +10,8 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>First name</th>
+                    <th>Last Name</th>
                     <th>Age</th>
                     <th>E-mail</th>
                 </tr>
@@ -18,7 +19,8 @@
             <tbody>
                 @foreach($users as $user )
                 <tr>
-                    <td>{{$user->name}}</td>
+                    <td>{{$user->fname}}</td>
+                    <td>{{$user->lname}}</td>
                     <td>{{$user->age}}</td>
                     <td>{{$user->email}}</td>
                     

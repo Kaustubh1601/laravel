@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 
 Route::get('/register', [RegistrationController::class, 'start'])->name('user.register');
-Route::post('/start', [RegistrationController::class, 'register']);
+Route::post('/register', [RegistrationController::class, 'register']);
 
 Route::get('/home', function(){
     return view('home');
@@ -21,4 +21,9 @@ Route::get('/home', function(){
 Route::get('user/view',[RegistrationController::class, 'view']);
 Route::post('user/update/{id}', [RegistrationController::class, 'update']);
 Route::get('user/delete/{id}', [RegistrationController::class, 'delete']);
-Route::get('user/edit/{id}', [RegistrationController::class, 'edit']);
+Route::get('user/edit/{id}', [RegistrationController::class, 'show']);
+
+Route::get('user/profile', [RegistrationController::class, 'profile']);
+
+
+

@@ -6,21 +6,28 @@
     <title>Registration</title>
 </head>
 <body>
-    <form action="{{ $url }}" method="post">
+    <form action="{{ $url? $url: ('/register') }}" method="post">
         @csrf
         <!-- <pre>
+            {{ url('/register') }}
+            $url? $url: 'register'
         @php
             print_r($errors->all());
         @endphp -->
         <div class="mb-3">
-            <label class="name">Name:</label>
-            <input type="text" name="name" id="name" value="{{old('name')}}">
+            <label class="name">First Name:</label>
+            <input type="text" name="fname" id="fname" value="{{old('fname')}}">
         </div>
 
         <div class="mb-3">
+            <label class="name">Last Name:</label>
+            <input type="text" name="lname" id="lname" value="{{old('lname')}}">
+        </div>
+
+        <!-- <div class="mb-3">
             <label class="age">Age:</label>
             <input type="number" name="age" id=""age value="{{old('age')}}">
-        </div>
+        </div> -->
 
         <div class="mb-3">
             <label class="email">E-mail:</label>

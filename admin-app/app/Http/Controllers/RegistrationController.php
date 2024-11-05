@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 
 class RegistrationController extends Controller
@@ -15,18 +16,20 @@ class RegistrationController extends Controller
     public function register(Request $request){
 
         $request->validate([
-            'name'=>'required|string',
-            'age'=> 'required|integer',
+            'fname'=>'required|string',
+            'lname'=>'string',
+            //'age'=> 'required|integer',
             'email'=>'required|email', //unique: users, email
             'password'=>'required|min:8|confirmed',
             'password_confirmation'=>'required'
         ]);
 
         $user = new User;
-        $user->name = $request['name'];
-        $user->age = $request['age'];
+        $user->fname = $request['fname'];
+        $user->lname = $request['lname'];
+        //$user->age = $request['age'];
         $user->email = $request['email'];
-        $user->password = md5($request['password']);
+        $user->password = Hash::make($request['password']);
         $user->save();
 
         $user_id = $user->user_id;
@@ -40,7 +43,7 @@ class RegistrationController extends Controller
         return view('view', compact('users'));
     }
 
-    public function edit($id){
+    public function show($id){
         $user = User::find($id);
         $url = url('user/update/')."/".$id;
         $title = 'Update Profile';
@@ -51,14 +54,15 @@ class RegistrationController extends Controller
         $users = User::findOrfail($id);
 
         $request->validate([
-            'name'=> 'required|string',
-            'age'=> 'required|integer',
+            'fname'=> 'required|string',
+            'lname'=> 'string',
+            //'age'=> 'required|integer',
             'email'=> 'required|email',
         ]);
 
         $users->update([
-            'name'=>$request->input('name'),
-            'age'=>$request->input('age'),
+            'fname'=>$request->input('fname'),
+            'lname'=>$request->input('lname'),
             'email'=>$request->input('email'),
         ]);
         
@@ -69,5 +73,9 @@ class RegistrationController extends Controller
         User::find($id)->delete();
 
         return redirect()->back();
+    }
+
+    public function profile(){
+        return view('update');
     }
 }
