@@ -146,15 +146,11 @@ class ApiController extends Controller
 
 
 
-
-
      public function passwordForm(){
         return [
             "Message" => "Enter your old passsword along with new ones."
         ];
      }
-
-
 
      public function updatePassword(Request $request){
 
@@ -198,11 +194,6 @@ class ApiController extends Controller
      }
 
 
-
-
-
-
-
      public function forgotPassword(){
         return [ "Message"=>"Please provide your e-mail"];
      }
@@ -233,7 +224,6 @@ class ApiController extends Controller
                 'token' => $token
             ];
      }
-
 
      public function changePassword1(Request $request){
         $request->validate([
@@ -271,17 +261,157 @@ class ApiController extends Controller
         
      }  
 
-    
+
+
+
+///////////////////////////////////// DASHBOARD ////////////////////////////////////////
+
+        public function dashboard(){
+            return [
+                'message' => 'Welcome to your Dashboard',
+            ];
+        }
+
+
+        public function addUser(){
+            redirect('/register');
+
+            return[
+                'message' => 'Please enter user details',
+            ];
+        }
+            
+        public function existingUser(){
+            $users = User::all();
+
+            return response()->json(
+                [
+                    'users' => $users,
+                    'message' => 'These are the existing users.'
+                ]
+                );
+        }
+
+        public function trashlist(){
+            $users = User::onlyTrashed()->get();
+
+            return response()->json([
+                'user' => $users,
+                'message' => 'These users are deactivated.'
+            ]);
+        }
+
+
+
+        public function editUser($id){
+            $user = User::find($id);
+
+            //$url = url('user/update/')."/".$id;
+            $title = 'Update Profile';
+            redirect ('/register')->with(compact('title', 'user'));
+
+            return [
+                'user' => $user,
+                'message' => 'Provide details to update user data.'
+            ];
+        }
+
+        public function updateUser(Request $request, $id){
+            $user = User::findorfail($id);
+            dd($user);
+            $request->validate([
+                'fname' => 'required|string',
+                'lname' => 'string',
+                'email' => 'required',
+                'dob' => 'required|date', //date-format:Y-m-d
+            ]);
+
+            $user->update([
+                'fname' => $request->input('fname'),
+                'lname' => $request->input('lname'),
+                'email' => $request->input('email'),
+                'dob' => $request->input('dob'),
+            ]);
+
+            redirect('/dashboard/existinguser');
+
+            return response()->json([
+                'user'=>$user,
+                'message'=>'User data updated successfully'
+            ]);
+
+        }
+
+
+
+        public function trashUser($id){
+            $user = User::find($id);
+            //dd($user);
+
+            $result = $user->delete();
+
+            if($result){
+                redirect('/dashboard/existinguser');
+            
+                return response->json([
+                    'message' => 'User data has been moved to trash.'
+                ]);
+            }else{
+                return [
+                    'message' => 'Something went wrong.'
+                ];
+            }
+
+            return [
+                         'user' => $user,
+                    ];
+            
+        }
+
+        public function restoreUser($id){
+            $user = User::onlyTrashed()->find($id);
+
+            $result = $user->restore();
+
+            if($result){
+                redirect('/dashboard/trashlist');
+
+                return response()->json([
+                    'message' => 'User info. has been restored successfully.'
+                ]);
+            }
+            else{
+                return [
+                    'message' => 'Something went wrong.'
+                ];
+            }
+        }
+
+        public function deleteUser($id){
+            $user = User::onlyTrashed()->find($id);
+
+            $result = $user->forceDelete();
+            
+            if($result){
+                redirect('/dashboard/trashlist');
+
+                return response()->json([
+                    'message' => 'User info. has been deleted permanently.'
+                ]);
+            }
+            else{
+                return [
+                    'message' => 'Something went wrong.'
+                ];
+            }
+        }
 
 }
 
 
-
 // $ php artisan passport:client --personal
-
 //  What should we name the personal access client? [Laravel Personal Access Client]:
 //  > Laravel Personal Access Client
-
 // Personal access client created successfully.
 // Client ID: 1
 // Client secret: Cjd0nMsNusFTqbdnCyAXunSeBPbPHXlENNAlbf9x

@@ -52,10 +52,19 @@ Route::post('/user/change-password', [ApiController::class, 'changePassword1']);
 //        print_r("hjhj");die;
 // });
 
+Route::get('/dashboard', [ApiController::class, 'dashboard']);
+
+Route::get('/dashboard/adduser', [ApiController::class, 'addUser']);
+Route::get('/dashboard/existinguser', [ApiController::class, 'existingUser']);
+Route::get('/dashboard/trashlist', [ApiController::class, 'trashlist']);
 
 
+Route::get('/dashboard/existinguser/edituser/{id}', [ApiController::class, 'editUser']);
+Route::post('/dashboard/existinguser/updateuser/{id}', [ApiController::class, 'updateUser']);
+Route::get('/dashboard/existinguser/trashuser/{id}', [ApiController::class, 'trashUser']);
 
-
+Route::get('/dashboard/trashlist/restore/{id}', [ApiController::class, 'restoreUser']);
+Route::get('/dashboard/trashlist/delete/{id}', [ApiController::class, 'deleteUser']);
 
 
 // Client ID: 1
